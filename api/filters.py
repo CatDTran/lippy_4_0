@@ -1,4 +1,10 @@
-def set_baseline(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
+"""
+A collections of common filters that might come handy sometimes
+"""
+import pandas as pd
+
+
+def set_baseline_to_threshold(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
     """
     This function will take a DataFrame and check to see which value is under a threshold. If a value is under a threshold,
     it will set that value equal to set_value parameter. The columns, and rows in which values are checked can be specified.
@@ -10,19 +16,19 @@ def set_baseline(dataframe=None, columns=None, rows=None, threshold=100, set_val
     :return: A new DataFrame that contains modified values.
     """
     # Raise error when there's no dataframe
-    if dataframe == None:
+    if dataframe is None:
         raise ValueError("A dataframe parameter is required")
     # use all dataframe columns if no columns parameter specified
-    if columns == None:
+    if columns is None:
         columns = list(dataframe)
-    # use all rows if no rows parameter specified, currently not used
-    if rows == None:
+    # use all rows if no rows parameter specified, currently all rows are considered
+    if rows is None:
         pass
-    # if no set_value is passed, default to threshold value
-    if set_value == None:
+    # if no set_value is passed, default to the threshold value
+    if set_value is None:
         set_value = threshold
 
     new_df = dataframe.copy()
-    new_df[columns <= threshold] = set_value
+    new_df = new_df.where(new_df >= threshold, set_value, raise_on_error=False)
     return new_df
 
