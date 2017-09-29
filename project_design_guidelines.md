@@ -1,6 +1,7 @@
 # LipPy_4.x API Project Requirements
 
 ### Style Guide:
+
 + Style guide must follow this: https://www.python.org/dev/peps/pep-0008/#comments, and this https://gist.github.com/CatDTran/20077c89348879c4e1fd4fbdda6427d3.
 + In addition, these rules are applied:
     + Short comments can be written inline.
@@ -10,6 +11,7 @@
     which allow Sphinx documentation generator to generate documentation effortlessly.
 
 ### Project Design Principles:
+
 + Using the newer python, Python 3.x
 + Design as an API. Which allow a more modular structure. This means other projects can use some parts of this API in their code. All API code must be written inside *./api* directory.
 Other directories contains code that is specific for LipPy_4.x
@@ -22,6 +24,7 @@ Other directories contains code that is specific for LipPy_4.x
 > myObject.someMemberMethod().someMemberMethod2().someMemberMethod3()
 
 ### Functionalities:
+
 LipPy_4.x API should have the following functionalities, these are common tasks/challenges that a researcher in Lipidomics is expected to deal with. The reason for this API is that it makes it easier for Lipidomics researchers to intergrate  this API to make their lives easier.
 - Filter:
   - Given a dataset of precursor/fragment mass and intensities, it should be able to filter out background noise. No instrument is perfect, thus the ability to filter out background noise is important.
@@ -37,4 +40,7 @@ LipPy_4.x API should have the following functionalities, these are common tasks/
   - Be able to perform other statistic such as parametrics test...
 - Database:
   - Provide a common interface to input data into mySQL database server of each lab's choosing.
-  - 
+- Static data:
+  - Static data in this context mean the files which contains data in interest, since each lab might
+  have different lipids classes of interest, database server, internal standard, element masses... The API must be built
+  to allow each lab to use their own static data.

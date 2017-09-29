@@ -1,4 +1,8 @@
 """
+
+Author: Cat Tran
+Created on: 09/27/2017
+
 A collections of common filters that might come handy sometimes
 """
 import pandas as pd
