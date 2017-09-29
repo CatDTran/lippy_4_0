@@ -30,9 +30,11 @@ LipPy_4.x API should have the following functionalities, these are common tasks/
   - Given a dataset of precursor/fragment mass and intensities, it should be able to filter out background noise. No instrument is perfect, thus the ability to filter out background noise is important.
   - The filter policy should also be adjustable by specifying arguments.
 - Naming molecules:
-  - The API should be able to name a molecule's formula based on a known list of precursor/fragment mass pair and formula. What this function does is simply search and match the found mass pair from and compare it to the list. This list is might be different for each labs and probably customized to different lab's lipids of interest.
+  - The API should be able to name a molecule's formula based on a known list of precursor/fragment mass pair and formula.
+  What this function does is simply search and match the found mass pair from and compare it to the list. This list is might be different for each labs and probably customized to different lab's lipids of interest.
   - It should be able to return a formula based on the passed in lipids group and their fatty acid chains.
   - It be able to return a formula based on the num of carbons, num of double bonds, and lipid group passed in as arguments.
+  - It should be able to calculate molecule mass given a formula string.
 - Statistic:
   - Be able to normalize to an internal standard. Internal standard in this context means the known lipids and concentration that is mixed directly into samples.
   - Be able to perform isotopic correction. To be explained...

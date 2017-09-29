@@ -22,8 +22,10 @@ def get_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=None, 
     passed in as arguments.
     :param precursor: The float value of a precursor mass.
     :param fragment: The float value of a fragment mass.
-    :param mass_name_list: A pandas.DataFrame that contains the list of known mass pairs and their names.
-    :param cols_tuple: A list of columns name in the mass_name_list DataFrame that this function will search in for matching.
+    :param mass_name_list: A pandas.DataFrame that contains the list of known mass pairs and their names. The DataFrame must have
+    the columns names shown in 'cols_tuple' parameter.
+    :param cols_tuple: A tuple of columns names that appears in the 'mass_name_list' DataFrame. This tuple MUST have the following
+    order: 0: Precursor mass | 1: Fragment mass | 2: name/formula!
     :param pm_tolerance: The precursor mass tolerance within which a precursor mass will be considered matched from the precursor mass
     in the list.
     :param fm_tolerance: The fragment mass tolerance within which a fragment mass will be considered matched from the fragment mass
@@ -51,7 +53,14 @@ def calculate_mass_from_formula(formula=None, elements_mass_file=None):
     in the formula string and look for their masses defined in a JSON file specified in 'elements_mass_file', and return the
     mass by multiplication and addition.
     :param formula: A string formula. It is expected to be something like this C57H104O6
-    :param elements_mass_file: The absolute path to a file that contain JSON for a list of elements.
+    :param elements_mass_file: The absolute path to a file that contain JSON for a list of elements. The JSON file should
+    contains 1 single object and have the format similar to this:   {
+                                                                      "C": 12.000000,
+                                                                      "H": 1.00782503223,
+                                                                      "O": 15.99491461957,
+                                                                      "P": 30.97376199842
+                                                                      ...
+                                                                    }
     :return: A float mass value of the formula.
     """
     # Raise error if neither formula nor elements_mass_file are specified
