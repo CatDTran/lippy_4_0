@@ -1,0 +1,14 @@
+{
+  "H1": {"mass": null, "abundance": 99.9885},
+  "H2": {"mass": null, "abundance": 0.0115},
+  "Li6": {"mass": null, "abundance":7.59},
+  "Li7": {"mass": null, "abundance":92.71},
+  "C12": {"mass": null, "abundance":98.93},
+  "C13": {"mass": null, "abundance":1.07},
+  "O16": {"mass": null, "abundance":99.757},
+  "O17": {"mass": null, "abundance":0.038},
+  "O18": {"mass": null, "abundance":0.205},
+  "F19": {"mass": null, "abundance":100},
+  "NA23": {"mass": null, "abundance":100},
+  "P31": {"mass": null, "abundance":100}
+}
