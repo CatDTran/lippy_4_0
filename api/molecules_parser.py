@@ -15,10 +15,10 @@ import numpy as np
 import pandas as pd
 
 
-def get_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=None, cols_tuple=('mass_pre', 'mass_frag', 'name'), pm_tolerance=0.3, fm_tolerance=None, atol=True):
+def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=None, cols_tuple=('mass_pre', 'mass_frag', 'name'), pm_tolerance=0.3, fm_tolerance=None, atol=True):
     """
     This function accepts a precursor mass, a fragment mass, and a list of known precursor/fragment mass pairs and their names,
-    and return the the name/s string that match the precursor/fragment mass pair (to a certain 'mass_tolerance')
+    and returns the the name/s string that match the precursor/fragment mass pair (to a certain 'mass_tolerance')
     passed in as arguments.
     :param precursor: The float value of a precursor mass.
     :param fragment: The float value of a fragment mass.
@@ -55,6 +55,7 @@ def get_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=None, 
                     names.append(row[cols_tuple[2]])
     return names
 
+
 def calculate_mass_from_formula(formula=None, elements_mass_file=None):
     """
     This function calculate the mass of a formula passed in as a string. What it does is that it parses the elements appear
@@ -85,6 +86,7 @@ def calculate_mass_from_formula(formula=None, elements_mass_file=None):
                 mass_sum = mass_sum + data[tup[0]]
     return mass_sum
 
+
 def calculate_mass_from_common_name(name=None, elements_mass_file=None):
     """
     This function calculate the mass of a formula passed in as a string. What it does is that it parses the elements appear
@@ -103,6 +105,7 @@ def calculate_mass_from_common_name(name=None, elements_mass_file=None):
     """
     pass
 
+
 def get_name_from_carbons_double_bonds(group=None, ncarbons=None, ndouble_bonds=None):
     """
     This function accept a lipid group, number of carbons, and number of double bonds as arguments and return a name string
@@ -119,6 +122,7 @@ def get_name_from_carbons_double_bonds(group=None, ncarbons=None, ndouble_bonds=
     else:
         return ("%s|%s:%s|" % (group, ncarbons, ndouble_bonds))
 
+
 def get_name_from_double_chains(group=None, chain_1=(0, 0), chain_2=(0, 0)):
     """
     This function return a lipid name from 2 chain tuples passed in as arguments. NOTE: This function perform no test on
@@ -133,6 +137,7 @@ def get_name_from_double_chains(group=None, chain_1=(0, 0), chain_2=(0, 0)):
     name = (get_name_from_carbons_double_bonds(group=group, ncarbons=(chain_1[0] + chain_2[0]) , ndouble_bonds=(chain_1[1] + chain_2[1]))
                                 + "(%d:%d~%d:%d)" % (chain_1[0], chain_1[1], chain_2[0], chain_2[1]))
     return name
+
 
 def build_lipids_from_group_chains(group=None, chains=None):
     pass

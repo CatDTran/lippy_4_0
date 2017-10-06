@@ -8,7 +8,7 @@ A collections of common filters that might come handy sometimes
 import pandas as pd
 
 
-def set_baseline_to_threshold(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
+def set_baseline_to_value(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
     """
     This function will take a DataFrame and check to see which value is under a threshold. If a value is under a threshold,
     it will set that value equal to set_value parameter. The columns, and rows in which values are checked can be specified.
