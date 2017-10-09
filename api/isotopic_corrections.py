@@ -37,22 +37,22 @@ def get_isotope_distribution_json(isotope_distribution_file=None):
         data = json.load(json_data)
     return data
 
-def get_isotope_distribution_from_natoms(natoms=None, isotope=None, abundance=None):
+def get_isotope_distribution_from_natoms(n_total_atoms=None, isotope=None, abundance=None):
     """
     Given the total number of atoms of an element, this function returns a dictionary in which the number of isotope atoms
     as key, and the probability of having that number of isotope atoms as value.
     (in a molecule). What it does is basically calculate the probability mass function.
-    :param natoms: An integer number of atoms of interest in a molecule.
+    :param n_total_atoms: An integer number of atoms of interest in a molecule.
     :param isotope: An isotope string of interest(ex: "C13"). NOTE: current not used, and has no effect on the output whatsoever.
     :param abundance: The natural abundance ratio of the isotope of interest. Should be a numerical value between [0,1]
     :return: A dictionary of potential number of isotopes and their probabilities.
     """
     # If
-    if natoms is None or abundance is None:
+    if n_total_atoms is None or abundance is None:
         raise ValueError("Both 'natoms' and 'abundance' parameters are required!")
     n_isotopes_probabilities = dict()
-    for k_isotopes in range(0,natoms + 1):
-        n_isotopes_probabilities[k_isotopes] = binom.pmf(k_isotopes, natoms, abundance)
+    for k_isotopes in range(0, n_total_atoms + 1):
+        n_isotopes_probabilities[k_isotopes] = binom.pmf(k_isotopes, n_total_atoms, abundance)
 
     return n_isotopes_probabilities
     

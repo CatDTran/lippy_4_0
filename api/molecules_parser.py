@@ -15,17 +15,15 @@ import numpy as np
 import pandas as pd
 
 
-def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=None, cols_tuple=('mass_pre', 'mass_frag', 'name'), pm_tolerance=0.3, fm_tolerance=None, atol=True):
+def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=None, pm_tolerance=0.3, fm_tolerance=None, atol=True):
     """
     This function accepts a precursor mass, a fragment mass, and a list of known precursor/fragment mass pairs and their names,
     and returns the the name/s string that match the precursor/fragment mass pair (to a certain 'mass_tolerance')
     passed in as arguments.
     :param precursor: The float value of a precursor mass.
     :param fragment: The float value of a fragment mass.
-    :param mass_name_list: A pandas.DataFrame that contains the list of known mass pairs and their names. The DataFrame must have
-    the columns names shown in 'cols_tuple' parameter.
-    :param cols_tuple: A tuple of columns names that appears in the 'mass_name_list' DataFrame. This tuple MUST have the following
-    order: 0: Precursor mass | 1: Fragment mass | 2: name/formula!
+    :param mass_name_list: A pandas.DataFrame that contains the list of known mass pairs and their names. The DataFrame
+    MUST have at least the following column names: 'precursor', 'fragment', and 'name'.
     :param pm_tolerance: The precursor mass tolerance within which a precursor mass will be considered matched from the precursor mass
     in the list.
     :param fm_tolerance: The fragment mass tolerance within which a fragment mass will be considered matched from the fragment mass
@@ -36,23 +34,20 @@ def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=Non
     # default fragment mass tolerance to precursor mass tolerance if not specified
     if fm_tolerance is None:
         fm_tolerance = pm_tolerance
-    # raise error when
+    # raise error for missing parameters
     if precursor is None or fragment is None or mass_name_list is None:
-        raise ValueError('Both \'precursor\' and \'mass_name_list\' parameter required')
-    names = list()
-    for index, row in mass_name_list.iterrows():
-        if atol:    # absolute tolerance is the default
-            # first search for precursor match
-            if np.isclose(precursor, row[cols_tuple[0]], atol=pm_tolerance):
-                # then search for fragment match
-                if np.isclose(fragment, row[cols_tuple[1]], atol=fm_tolerance):
-                    names.append(row[cols_tuple[2]])
-        else:   # when atol is false, then relative tolerance is used instead
-            # first search for precursor match
-            if np.isclose(precursor, row[cols_tuple[0]], rtol=pm_tolerance):
-                # then search for fragment match
-                if np.isclose(fragment, row[cols_tuple[1]], rtol=fm_tolerance):
-                    names.append(row[cols_tuple[2]])
+        raise ValueError("Both 'precursor' and 'mass_name_list' parameter required")
+    if 'precursor' not in list(mass_name_list) or 'fragment' not in  list(mass_name_list) or 'lipid_name' not in list(mass_name_list):
+        raise ValueError("'mass_name_list' DataFrame must have 'precursor', 'fragment', and 'name' columns")
+    # chose between relative or absolute tolerance
+    if atol:
+        precursor_matches = pd.Series(np.isclose(mass_name_list['precursor'], pd.Series(precursor, mass_name_list.index), atol=pm_tolerance))
+        fragment_matches = pd.Series(np.isclose(mass_name_list['fragment'], pd.Series(fragment, mass_name_list.index), atol=fm_tolerance))
+        mask = np.logical_and(precursor_matches, fragment_matches)
+        names = mass_name_list['lipid_name'].where(mask)
+    else:
+        names = mass_name_list['name'].loc[np.isclose(mass_name_list['precursor'], precursor, rtol=pm_tolerance) and np.isclose(mass_name_list['fragment'], fragment, rtol=fm_tolerance)]
+
     return names
 
 
