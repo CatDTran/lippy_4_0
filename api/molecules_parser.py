@@ -29,7 +29,7 @@ def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=Non
     :param fm_tolerance: The fragment mass tolerance within which a fragment mass will be considered matched from the fragment mass
     in the list. The default is equal to pm_tolerance.
     :param atol: Whether the tolerance parameter is absolute or relative. THe default is True for absolute; and False for relative
-    :return: A list of matched name strings.
+    :return: A DataFrame of matched precursor/fragment mass pair, lipid name... from the name list
     """
     # default fragment mass tolerance to precursor mass tolerance if not specified
     if fm_tolerance is None:
@@ -39,16 +39,18 @@ def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=Non
         raise ValueError("Both 'precursor' and 'mass_name_list' parameter required")
     if 'precursor' not in list(mass_name_list) or 'fragment' not in  list(mass_name_list) or 'lipid_name' not in list(mass_name_list):
         raise ValueError("'mass_name_list' DataFrame must have 'precursor', 'fragment', and 'name' columns")
-    # chose between relative or absolute tolerance
+    # chose between either relative or absolute tolerance
     if atol:
         precursor_matches = pd.Series(np.isclose(mass_name_list['precursor'], pd.Series(precursor, mass_name_list.index), atol=pm_tolerance))
         fragment_matches = pd.Series(np.isclose(mass_name_list['fragment'], pd.Series(fragment, mass_name_list.index), atol=fm_tolerance))
-        mask = np.logical_and(precursor_matches, fragment_matches)
-        names = mass_name_list['lipid_name'].where(mask)
+        pair_matches = np.logical_and(precursor_matches, fragment_matches)
+        return mass_name_list[pair_matches]
     else:
-        names = mass_name_list['name'].loc[np.isclose(mass_name_list['precursor'], precursor, rtol=pm_tolerance) and np.isclose(mass_name_list['fragment'], fragment, rtol=fm_tolerance)]
+        precursor_matches = pd.Series(np.isclose(mass_name_list['precursor'], pd.Series(precursor, mass_name_list.index), atol=pm_tolerance))
+        fragment_matches = pd.Series(np.isclose(mass_name_list['fragment'], pd.Series(fragment, mass_name_list.index), atol=fm_tolerance))
+        pair_matches = np.logical_and(precursor_matches, fragment_matches)
+        return mass_name_list[pair_matches]
 
-    return names
 
 
 def calculate_mass_from_formula(formula=None, elements_mass_file=None):
