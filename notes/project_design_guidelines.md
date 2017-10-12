@@ -61,3 +61,29 @@ of carbons, `total_dbs` is the total number of double bonds in the lipid (ex: 16
 more than 1 chains and these chains are known, the parenthesis follow contains that information: `chain1_cbs` is
  the number of carbons, and `chain1_dbs` is the number of double bonds in chain 1, while `chain2_cbs` and `chain2_dbs`
  are the number of carbons and double bonds in chain 2, and so on.
+
+### Core Algorithms:
+
+ - ##### Filters:
+
+ - ##### Naming mass pairs:
+
+ - ##### Isotopic Correction Algorithm (Pseudocode):
+ ```python
+# isotopic_corrections.py
+
+ ```
+ ```python
+for each row in mass_pair-intensity named dataset:
+    """
+    Let call distributions is a dictionary of molecules which contains different
+    number of isotope carbon atoms and their probalities. For example:    
+    distributions = {0: probability_0, 1:probability_1, 2:probability_2...,ncarbons:probability_n}
+    """
+    distributions = OrderedDict()
+    distributions = calculate_isotope_distributions(lipid_name.ncarbons)
+    # use distributions to calculate potential isotopic masses and their probability.
+    mass_distributions = get_molecular_isotopic_mass_distributions(name, distributions)
+    # mass_distributions = {iso_mass_0:prabability_0, iso_mass_1:probability_1,...iso_mass_n:probability_n }
+    
+ ```

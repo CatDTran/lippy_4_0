@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 
-def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=None, pm_tolerance=0.3, fm_tolerance=None, atol=True):
+def get_name_for_mass_pair(precursor=None, fragment=None, mass_name_list=None, pm_tolerance=0.3, fm_tolerance=None, atol=True):
     """
     This function accepts a precursor mass, a fragment mass, and a list of known precursor/fragment mass pairs and their names,
     and returns the the name/s string that match the precursor/fragment mass pair (to a certain 'mass_tolerance')
@@ -53,7 +53,7 @@ def search_name_from_mass_pair(precursor=None, fragment=None, mass_name_list=Non
 
 
 
-def calculate_mass_from_formula(formula=None, elements_mass_file=None):
+def get_mass_from_formula(formula=None, elements_mass_file=None):
     """
     This function calculate the mass of a formula passed in as a string. What it does is that it parses the elements appear
     in the formula string and look for their masses defined in a JSON file specified in 'elements_mass_file', and return the
@@ -84,22 +84,17 @@ def calculate_mass_from_formula(formula=None, elements_mass_file=None):
     return mass_sum
 
 
-def calculate_mass_from_common_name(name=None, elements_mass_file=None):
+def get_mass_from_name(name=None, elements_mass_dict=None):
     """
-    This function calculate the mass of a formula passed in as a string. What it does is that it parses the elements appear
-    in the formula string and look for their masses defined in a JSON file specified in 'elements_mass_file', and return the
-    mass by multiplication and addition.
-    :param formula: A string formula. It is expected to be something like this C57H104O6
-    :param elements_mass_file: The absolute path to a file that contain JSON for a list of elements. The JSON file should
-    contains 1 single object and have the format similar to this:   {
-                                                                      "C": 12.000000,
-                                                                      "H": 1.00782503223,
-                                                                      "O": 15.99491461957,
-                                                                      "P": 30.97376199842
-                                                                      ...
-                                                                    }
+    This function calculate the mass of a lipid name passed in as a string. What it does is that it parses the elements appear
+    in the name string and search for their masses defined in the dictionary passed in as 'elements_mass_dict', and return the
+    total mass for that lipid name.
+    :param name: A name string. The name is expected to be something like this
+    :param elements_mass_dict: A dictionary that contains element symbols and their exact masses (non isotopic/standard). The dictionary is expected
+    to have the form: {'C': 12.000000, 'H': 1.00782503223, 'O': 15.99491461957, 'P': 30.97376199842,...}.
     :return: A float mass value of the formula.
     """
+    # TODO
     pass
 
 
@@ -134,6 +129,7 @@ def get_name_from_double_chains(group=None, chain_1=(0, 0), chain_2=(0, 0)):
     name = (get_name_from_carbons_double_bonds(group=group, ncarbons=(chain_1[0] + chain_2[0]) , ndouble_bonds=(chain_1[1] + chain_2[1]))
                                 + "(%d:%d~%d:%d)" % (chain_1[0], chain_1[1], chain_2[0], chain_2[1]))
     return name
+
 
 
 def build_lipids_from_group_chains(group=None, chains=None):
