@@ -89,12 +89,17 @@ def get_mass_from_name(name=None, elements_mass_dict=None):
     This function calculate the mass of a lipid name passed in as a string. What it does is that it parses the elements appear
     in the name string and search for their masses defined in the dictionary passed in as 'elements_mass_dict', and return the
     total mass for that lipid name.
-    :param name: A name string. The name is expected to be something like this
+    :param name: A name string. The name is expected to be something like this: FFA|14:1|(14:1)[-H],
+                                                                                FAHFA|40:9|(MS2-20:4,20:5)[-H],
+                                                                                LPC|22:6|(22:6)[HF2],
+                                                                                CE|24:0|(24:0)[NH4],
+                                                                                DAG|34:4|(NL-16:1,18:3)[NH4]
+                                                                                ...
     :param elements_mass_dict: A dictionary that contains element symbols and their exact masses (non isotopic/standard). The dictionary is expected
     to have the form: {'C': 12.000000, 'H': 1.00782503223, 'O': 15.99491461957, 'P': 30.97376199842,...}.
     :return: A float mass value of the formula.
     """
-    # TODO
+    # TODO: use regular expression to parse and calculate mass
     pass
 
 
