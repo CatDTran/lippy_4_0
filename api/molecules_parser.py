@@ -84,11 +84,26 @@ def get_mass_from_formula(formula=None, elements_mass_file=None):
     return mass_sum
 
 
-def get_mass_from_name(name=None, elements_mass_dict=None):
+def parse_lipid_name(name=None):
     """
-    This function calculate the mass of a lipid name passed in as a string. What it does is that it parses the elements appear
-    in the name string and search for their masses defined in the dictionary passed in as 'elements_mass_dict', and return the
-    total mass for that lipid name.
+    This function accept a lipid name string and return a list with elements name as
+    keys, and their occurrences as values. If a lipid has 1 head group, it will return the
+    head group as well. It utilizes regular expression to accomplish such task.
+    :param name: A string that represents the name of a lipids. Read projects_design_guidelines.md
+    for more info.
+    return: A list of elements name and their occurences.
+    """
+    if name is None:
+        raise ValueError("The 'name' parameter must be specified!")
+    parsed = re.findall(r'\w+|\d:\d|\(\d:\d\,\d:\d\,\d:\d\)', name)
+    return parsed
+
+
+def get_mass_from_name(name=None, elements_mass_dict=None, head_group_mass_dict = None):
+    """
+    This function calculates the mass of a neutral/non-ionized lipid name passed in as a string. What it does is that it
+    parses the elements mass defined in the dictionary passed in as 'elements_mass_dict', head group mass passed in as
+    'head_group_mass_dict, and return the total mass for that lipid name.
     :param name: A name string. The name is expected to be something like this: FFA|14:1|(14:1)[-H],
                                                                                 FAHFA|40:9|(MS2-20:4,20:5)[-H],
                                                                                 LPC|22:6|(22:6)[HF2],
@@ -97,10 +112,23 @@ def get_mass_from_name(name=None, elements_mass_dict=None):
                                                                                 ...
     :param elements_mass_dict: A dictionary that contains element symbols and their exact masses (non isotopic/standard). The dictionary is expected
     to have the form: {'C': 12.000000, 'H': 1.00782503223, 'O': 15.99491461957, 'P': 30.97376199842,...}.
-    :return: A float mass value of the formula.
+    :param head_group_mass_dict: A dictionary that contains common head groups and their masses.
+    :return: A float mass value for the given name.
     """
-    # TODO: use regular expression to parse and calculate mass
-    pass
+    if name is None or elements_mass_dict is None or head_group_mass_dict is None:
+        raise ValueError("The 'name', 'elements_mass_dict', and 'head_group_mass_dict' parameters must be specified!")
+    # First parse the name into individual entities such as: head group, total carbons, total double bonds
+    parsed = parse_lipid_name(name)
+    mass = 0
+    try:
+        # mass = head_group's mass + (ncarbons * carbon_mass) + (ncarbons * 2 + 1) * hydrogen_mass
+        mass = (head_group_mass_dict[parsed[0]]  + (elements_mass_dict['C'] * int(parsed[1])) # head group and ncarbons mass
+                                                + (int(parsed[1]) * 2 + 1) * int(elements_mass_dict['H']) # total possible hydrogen mass
+                                                - (int(parsed[2]) * 2) * int(elements_mass_dict['H'])) # minus hydrogen mass replaced by double bonds
+    except:
+        print ("Some elements and head group not found")
+    return mass
+
 
 
 def get_name_from_carbons_double_bonds(group=None, ncarbons=None, ndouble_bonds=None):

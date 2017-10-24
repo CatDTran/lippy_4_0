@@ -57,4 +57,5 @@ def get_isotope_distribution_from_natoms(n_total_atoms=None, isotope=None, abund
     return n_isotopes_probabilities
     
 
-def get_isotopic_mass_distributions()
+def get_isotopic_mass_distributions():
+    pass

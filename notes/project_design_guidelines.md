@@ -70,37 +70,24 @@ more than 1 chains and these chains are known, the parenthesis follow contains t
 ### Core Algorithms:
 
  - ##### Filters:
+ 
 
  - ##### Naming mass pairs:
 
  - ##### Isotopic Correction Algorithm (Pseudocode):
  ```python
 # isotopic_corrections.py
-filtered_named_data_set
+filtered_named_data_set = np.DataFrame(..)
 for each precursor_mass in filtered_named_data_set:
     summed_dataset = sum the intensity of all fragment_mass    
-    distributions = find_isotopic_distribution for each composition in new_dataset
-for each_precursor_mass in summed_dataset:
-    use distributions to adjust this precursor total intensity by multiplying probabilities to adjacent precursor_mass
+distributions = find_isotopic_distribution for each lipid_name in filtered_named_data_set
+for composition in summed_dataset:
+    find isotope distributions
+    use distributions to adjust this composition`s total intensity by multiplying probabilities to adjacent precursor_mass
     adjusted_df = adjusted dataset
-for each precursor_mass in adjusted_df:
+for each composition in adjusted_df:
     find the fraction of increment/decrement in total intensity from summed_dataset
-    use this fraction to adjust individual framgent intensity for this precursor_mass
+    use this fraction to adjust individual framgent intensity for this composition
     iso_corrected_df = isotope corrected dataset from this step
 return iso_corrected_df
-
- ```
- ```python
-for each row in mass_pair-intensity named dataset:
-    """
-    Let call distributions is a dictionary of molecules which contains different
-    number of isotope carbon atoms and their probalities. For example:    
-    distributions = {0: probability_0, 1:probability_1, 2:probability_2...,ncarbons:probability_n}
-    """
-    distributions = OrderedDict()
-    distributions = calculate_isotope_distributions(lipid_name.ncarbons)
-    # use distributions to calculate potential isotopic masses and their probability.
-    mass_distributions = get_molecular_isotopic_mass_distributions(name, distributions)
-    # mass_distributions = {iso_mass_0:prabability_0, iso_mass_1:probability_1,...iso_mass_n:probability_n }
-
  ```
