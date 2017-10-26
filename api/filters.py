@@ -8,7 +8,7 @@ A collections of common filters that might come handy sometimes
 import pandas as pd
 
 
-def set_baseline_to_value(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
+def baseline_to_value_filter(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
     """
     This function will take a DataFrame and check to see which value is under a threshold. If a value is under a threshold,
     it will set that value equal to set_value parameter. The columns, and rows in which values are checked can be specified.
@@ -102,4 +102,52 @@ def average_and_max_filter(dataframe=None, columns=None, avg_threshold=100, max_
         new_df = new_df.loc[(new_df[columns].mean(axis=1) >= avg_threshold) | (new_df[columns].max(axis=1) >= max_threshold)]
     return new_df
 
+
+def low_average_group_filter(dataframe=None, group=None, threshold=100):
+    """
+    This is basically a wrapper for low_average_filter().
+    :param dataframe: See low_average_filter().
+    :param group: A list of group columns that this method will consider.
+    :param threshold: See low_average_filter().
+    :return: A new dataframe.
+    """
+    # This wrapper actually requires a group of column names
+    if group is None:
+        raise ValueError("The 'group' parameter must be specified!")
+    return low_average_filter(dataframe=dataframe, columns=group, threshold=threshold)
+
+
+def average_and_max_group_filter(dataframe=None, group=None, avg_threshold=100, max_threshold=300):
+    """
+    This is basically a wrapper for average_max_filter()
+    :param dataframe: See average_max_filter
+    :param group: A list of group columns that this method will consider.
+    :param avg_threshold: See average_max_filter
+    :param max_threshold: See average_max_filter
+    :return: A new dataframe.
+    """
+    if group is None:
+        raise ValueError("The 'group' parameter must be specified!")
+    return average_and_max_filter(dataframe=dataframe, columns=group, avg_threshold=avg_threshold, max_threshold=max_threshold)
+
+
+
+def group_quantile_filter(dataframe=None, group=None, quantile=0.3, threshold=100):
+    """
+    This method will look at a group of columns in the dataframe and perform a quantile test. For each row in that group,
+    if there is at least the quantile (fyi, 0.3 = 30%) number of the cells that is above the threshold, it will keep that row in the new dataframe.
+    Otherwise, it will filter that row out. The original dataframe will be unmodified.
+    :param dataframe: A pandas Dataframe.
+    :param group: A list of columns names that we want to perform the test against.
+    :param quantile: A quantile (on the scale of [0, 1]).
+    :param threshold: A float value for which the quantile is compared against.
+    :return: A new dataframe.
+    """
+    if dataframe is None or group is None:
+        raise ValueError("Both 'dataframe' and 'groups' parameters must be specified!")
+    if (quantile < 0 or quantile > 1):
+        raise ValueError("The 'quantile' parameter must be within the range of [0, 1] (quantile = 0 or 1 is acceptable)!")
+    new_df = dataframe.copy()
+    new_df = new_df.loc[ (new_df[group] >= threshold).apply(lambda r: (r==True).sum()/len(r) >= quantile, axis=1) ]
+    return new_df
 
