@@ -1,5 +1,0 @@
-- [-] Universal interface to read file whether .csv or .xlxs
-- [ ] Set baseline to a threshold
-- [ ] Calculate mass from formula, get name from group, ncarbons, and ndouble-bonds
-- [ ] Find name that matches precursor/fragment masses.
-- [ ]
