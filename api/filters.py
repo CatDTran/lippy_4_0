@@ -3,12 +3,12 @@
 Author: Cat Tran
 Created on: 09/27/2017
 
-A collections of common filters that might come handy sometimes
+A collections of common filters that are commonly used in lipidomics research.
 """
 import pandas as pd
 
 
-def baseline_to_value_filter(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
+def set_baseline_to_value(dataframe=None, columns=None, rows=None, threshold=100, set_value=None):
     """
     This function will take a DataFrame and check to see which value is under a threshold. If a value is under a threshold,
     it will set that value equal to set_value parameter. The columns, and rows in which values are checked can be specified.
@@ -148,6 +148,6 @@ def group_quantile_filter(dataframe=None, group=None, quantile=0.3, threshold=10
     if (quantile < 0 or quantile > 1):
         raise ValueError("The 'quantile' parameter must be within the range of [0, 1] (quantile = 0 or 1 is acceptable)!")
     new_df = dataframe.copy()
-    new_df = new_df.loc[ (new_df[group] >= threshold).apply(lambda r: (r==True).sum()/len(r) >= quantile, axis=1) ]
+    new_df = new_df.loc[ (new_df[group] >= threshold).apply(lambda row: (row==True).sum()/len(row) >= quantile, axis=1) ]
     return new_df
 
