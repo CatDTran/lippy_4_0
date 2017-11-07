@@ -167,3 +167,14 @@ def get_name_from_double_chains(group=None, chain_1=(0, 0), chain_2=(0, 0)):
 
 def build_lipids_from_group_chains(group=None, chains=None):
     pass
+
+
+def get_lipid_group_from_name(name=None):
+    """
+    This function will return a lipid group given a lipid name. The name parameter must follow our naming convention.
+    :param name: A string represent the lipid name.
+    :return: A string represent the group of that lipid.
+    """
+    if name is None:
+        raise  ValueError("The 'name' parameter must be specified!")
+    return re.match('\w+', name)[0]

@@ -131,6 +131,26 @@ def average_and_max_group_filter(dataframe=None, group=None, avg_threshold=100, 
     return average_and_max_filter(dataframe=dataframe, columns=group, avg_threshold=avg_threshold, max_threshold=max_threshold)
 
 
+def child_peaks_filter(dataframe=None, child_peaks=[(1, 10)], neu_loss_col='neutral_loss'):
+    """
+    This method will filter out any rows that have neutral loss value falls between the 'child_peaks' parameter pair. As
+    result, it will only return a new dataframe that contains only rows with neutral loss values that do not fall between
+    child_peaks parameter pair/s. The original dataframe is un-modified.
+    :param dataframe: An original dataframe that need child peaks filtered.
+    :param child_peaks: A list of tuples that contains the range within which neutral loss values are filtered out.
+    :param neu_loss_col: A string column name where the neutral loss values can be found.
+    :return: A new dataframe
+    """
+    if dataframe is None:
+        raise ValueError("The 'dataframe' parameter must be specified!")
+    new_df = dataframe.copy()
+    # perform child peak filter for each of the (min,max) child peaks in the 'child_peaks' parameters
+    for pair in child_peaks:
+        # filter, and concatenate rows that have neutral loss above the max and rows that have neutral loss below the min
+        new_df = pd.concat([new_df[new_df[neu_loss_col] > max(pair)], new_df[new_df[neu_loss_col] < min(pair)]])
+    return  new_df
+
+
 
 def group_quantile_filter(dataframe=None, group=None, quantile=0.3, threshold=100):
     """
