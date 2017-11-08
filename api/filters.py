@@ -103,18 +103,22 @@ def average_and_max_filter(dataframe=None, columns=None, avg_threshold=100, max_
     return new_df
 
 
-def low_average_group_filter(dataframe=None, group=None, threshold=100):
+def low_average_group_filter(dataframe=None, groups=None, threshold=100):
     """
-    This is basically a wrapper for low_average_filter().
+    For each row, this method will go through each group of columns in the dataframe, if all of average of each group is
+    below the threshold, that row will be removed for the returned dataframe. So as long as there is at least 1 group's
+    average surpasses the threshold, that entire row will be kept. The original dataframe is un-modified.
     :param dataframe: See low_average_filter().
-    :param group: A list of group columns that this method will consider.
+    :param groups: A list of lists of group columns this method will check.
     :param threshold: See low_average_filter().
     :return: A new dataframe.
     """
     # This wrapper actually requires a group of column names
-    if group is None:
+    if dataframe is None or groups is None:
         raise ValueError("The 'group' parameter must be specified!")
-    return low_average_filter(dataframe=dataframe, columns=group, threshold=threshold)
+    new_df = dataframe.copy()
+    temp = new_df.apply(lambda row: groups_average_boolean(row=row, groups=groups, threshold=threshold), axis=1)
+    return new_df.loc[temp]
 
 
 def average_and_max_group_filter(dataframe=None, group=None, avg_threshold=100, max_threshold=300):
@@ -171,3 +175,18 @@ def group_quantile_filter(dataframe=None, group=None, quantile=0.3, threshold=10
     new_df = new_df.loc[ (new_df[group] >= threshold).apply(lambda row: (row==True).sum()/len(row) >= quantile, axis=1) ]
     return new_df
 
+
+#--------------------------------------------------- helper methods----------------------------------------------//
+
+def groups_average_boolean(row=None, groups=None, threshold=100):
+    """
+    A helper method for 'low_group_average_filter()'
+    :param row:
+    :return:
+    """
+    kept = False
+    for group in groups:
+        kept = row[group].mean() >= threshold
+        if kept:
+            break
+    return kept
