@@ -188,5 +188,5 @@ def groups_average_boolean(row=None, groups=None, threshold=100):
     for group in groups:
         kept = row[group].mean() >= threshold
         if kept:
-            break
+            return kept
     return kept
